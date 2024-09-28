@@ -22,6 +22,16 @@ const UserSchema = new mongoose.Schema({
     type: [String],
     default: ['patient'],
   },
+  address: {
+    type: String,
+  },
+  phoneNumber: {
+    type: String,
+  },
+  insurance: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Insurance',
+  },
 });
 
 module.exports = mongoose.model('User', UserSchema);

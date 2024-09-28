@@ -9,6 +9,8 @@ import Profile from './components/Profile';
 import UploadInsurance from './components/UploadInsurance';
 import AppointmentList from './components/AppointmentList';
 import RequestAppointment from './components/RequestAppointment';
+import InvoiceList from './components/InvoiceList';
+import PayInvoice from './components/PayInvoice';
 
 function App() {
   return (
@@ -17,6 +19,7 @@ function App() {
         <Link to="/">Home</Link> |{' '}
         <Link to="/appointments">Appointments</Link> |{' '}
         <Link to="/request-appointment">Request Appointment</Link> |{' '}
+        <Link to="/invoices">Invoices</Link> |{' '}
         <Link to="/profile">Profile</Link>
       </nav>
       <Switch>
@@ -28,6 +31,8 @@ function App() {
         <PrivateRoute path="/upload-insurance" component={UploadInsurance} />
         <PrivateRoute path="/appointments" component={AppointmentList} />
         <PrivateRoute path="/request-appointment" component={RequestAppointment} />
+        <PrivateRoute exact path="/invoices" component={InvoiceList} />
+        <PrivateRoute path="/invoices/:invoiceId/pay" component={PayInvoice} />
         {/* ... other routes ... */}
       </Switch>
     </div>

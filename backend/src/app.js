@@ -6,6 +6,7 @@ const errorHandler = require('./middleware/errorMiddleware');
 const connectDB = require('./config/dbConfig');
 const userRoutes = require('./routes/userRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
+const invoiceRoutes = require('./routes/invoiceRoutes');
 
 // Connect to database
 connectDB();
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api/invoices', invoiceRoutes);
 
 // Error handling middleware
 app.use(errorHandler);

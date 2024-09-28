@@ -25,6 +25,10 @@ const AppointmentSchema = new mongoose.Schema({
   notes: {
     type: String,
   },
+  invoiceId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Invoice',
+  },
 });
 
 module.exports = mongoose.model('Appointment', AppointmentSchema);

@@ -7,6 +7,11 @@ const InvoiceSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  appointmentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Appointment',
+    required: true,
+  },
   amountDue: {
     type: Number,
     required: true,
@@ -15,19 +20,19 @@ const InvoiceSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  invoiceDate: {
+    type: Date,
+    default: Date.now,
+  },
   dueDate: {
     type: Date,
-    required: true,
   },
   status: {
     type: String,
     enum: ['unpaid', 'paid', 'overdue'],
     default: 'unpaid',
   },
-  description: {
-    type: String,
-  },
-  stripePaymentIntentId: {
+  stripeInvoiceId: {
     type: String,
   },
 });

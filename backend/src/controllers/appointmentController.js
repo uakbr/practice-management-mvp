@@ -1,14 +1,21 @@
 // Handles appointment scheduling and management
 const Appointment = require('../models/appointmentModel');
+const { validationResult } = require('express-validator');
 
 // Request a new appointment
 const requestAppointment = async (req, res) => {
+  // Validate request data
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   const { appointmentDate, notes } = req.body;
   try {
     const appointment = new Appointment({
       userId: req.user.userId,
       appointmentDate,
       notes,
+      status: 'requested',
     });
     await appointment.save();
     res.status(201).json({ message: 'Appointment requested successfully', appointment });
@@ -18,23 +25,23 @@ const requestAppointment = async (req, res) => {
   }
 };
 
-// Get user's appointments
-const getUserAppointments = async (req, res) => {
+// View user's appointments
+const viewAppointments = async (req, res) => {
   try {
-    const appointments = await Appointment.find({ userId: req.user.userId });
+    const appointments = await Appointment.find({ userId: req.user.userId }).sort({ appointmentDate: -1 });
     res.json(appointments);
   } catch (error) {
-    console.error('Get Appointments Error:', error);
+    console.error('View Appointments Error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
 // Cancel an appointment
 const cancelAppointment = async (req, res) => {
-  const { appointmentId } = req.params;
+  const { id } = req.params;
   try {
     const appointment = await Appointment.findOneAndUpdate(
-      { _id: appointmentId, userId: req.user.userId },
+      { _id: id, userId: req.user.userId },
       { status: 'canceled' },
       { new: true }
     );
@@ -49,12 +56,12 @@ const cancelAppointment = async (req, res) => {
 };
 
 // Check-in to an appointment
-const checkInAppointment = async (req, res) => {
-  const { appointmentId } = req.params;
+const checkIn = async (req, res) => {
+  const { id } = req.params;
   try {
     const appointment = await Appointment.findOneAndUpdate(
-      { _id: appointmentId, userId: req.user.userId },
-      { checkInTime: new Date(), status: 'completed' },
+      { _id: id, userId: req.user.userId },
+      { checkInTime: new Date(), status: 'in-progress' },
       { new: true }
     );
     if (!appointment) {
@@ -67,9 +74,29 @@ const checkInAppointment = async (req, res) => {
   }
 };
 
+// Check-out of an appointment
+const checkOut = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const appointment = await Appointment.findOneAndUpdate(
+      { _id: id, userId: req.user.userId },
+      { checkOutTime: new Date(), status: 'completed' },
+      { new: true }
+    );
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+    res.json({ message: 'Checked out successfully', appointment });
+  } catch (error) {
+    console.error('Check-Out Error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   requestAppointment,
-  getUserAppointments,
+  viewAppointments,
   cancelAppointment,
-  checkInAppointment,
+  checkIn,
+  checkOut,
 };

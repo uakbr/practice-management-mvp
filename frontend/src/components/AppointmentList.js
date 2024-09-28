@@ -1,50 +1,108 @@
 // Displays a list of upcoming and past appointments
 import React, { useEffect, useContext } from 'react';
-import { getUserAppointments } from '../services/appointmentService';
+import {
+  getAppointments,
+  cancelAppointment,
+  checkInAppointment,
+  checkOutAppointment,
+} from '../services/appointmentService';
 import { AuthContext } from '../state/authContext';
 import { AppointmentContext } from '../state/appointmentContext';
+import {
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  Typography,
+} from '@material-ui/core';
 
 const AppointmentList = () => {
+  const { appointments, setAppointments, updateAppointment } = useContext(AppointmentContext);
   const { getToken } = useContext(AuthContext);
-  const { appointments, setAppointments } = useContext(AppointmentContext);
-  const token = getToken();
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await getUserAppointments(token);
+        const token = getToken();
+        const response = await getAppointments(token);
         setAppointments(response.data);
       } catch (error) {
-        console.error('Fetch Appointments Error:', error);
+        console.error('Error fetching appointments:', error);
       }
     };
-
     fetchAppointments();
-  }, [token, setAppointments]);
+  }, [getToken, setAppointments]);
 
   const handleCancel = async (appointmentId) => {
     try {
-      await cancelAppointment(appointmentId, token);
-      setAppointments(appointments.filter((appt) => appt._id !== appointmentId));
-      alert('Appointment canceled');
+      const token = getToken();
+      const response = await cancelAppointment(appointmentId, token);
+      updateAppointment(response.data.appointment);
     } catch (error) {
-      console.error('Cancel Appointment Error:', error);
+      console.error('Error canceling appointment:', error);
+    }
+  };
+
+  const handleCheckIn = async (appointmentId) => {
+    try {
+      const token = getToken();
+      const response = await checkInAppointment(appointmentId, token);
+      updateAppointment(response.data.appointment);
+    } catch (error) {
+      console.error('Error checking in:', error);
+    }
+  };
+
+  const handleCheckOut = async (appointmentId) => {
+    try {
+      const token = getToken();
+      const response = await checkOutAppointment(appointmentId, token);
+      updateAppointment(response.data.appointment);
+    } catch (error) {
+      console.error('Error checking out:', error);
     }
   };
 
   return (
     <div>
-      <h2>Your Appointments</h2>
-      <ul>
+      <Typography variant="h4">My Appointments</Typography>
+      <List>
         {appointments.map((appt) => (
-          <li key={appt._id}>
-            {new Date(appt.appointmentDate).toLocaleString()} - {appt.status}
+          <ListItem key={appt._id}>
+            <ListItemText
+              primary={new Date(appt.appointmentDate).toLocaleString()}
+              secondary={`Status: ${appt.status}`}
+            />
             {appt.status === 'scheduled' && (
-              <button onClick={() => handleCancel(appt._id)}>Cancel</button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => handleCancel(appt._id)}
+              >
+                Cancel
+              </Button>
             )}
-          </li>
+            {appt.status === 'scheduled' && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleCheckIn(appt._id)}
+              >
+                Check-In
+              </Button>
+            )}
+            {appt.status === 'in-progress' && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleCheckOut(appt._id)}
+              >
+                Check-Out
+              </Button>
+            )}
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   );
 };

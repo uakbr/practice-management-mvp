@@ -11,16 +11,28 @@ export const AppointmentProvider = ({ children }) => {
   };
 
   const updateAppointment = (updatedAppointment) => {
-    setAppointments(
-      appointments.map((appt) =>
+    setAppointments((prevAppointments) =>
+      prevAppointments.map((appt) =>
         appt._id === updatedAppointment._id ? updatedAppointment : appt
       )
     );
   };
 
+  const removeAppointment = (appointmentId) => {
+    setAppointments((prevAppointments) =>
+      prevAppointments.filter((appt) => appt._id !== appointmentId)
+    );
+  };
+
   return (
     <AppointmentContext.Provider
-      value={{ appointments, setAppointments, addAppointment, updateAppointment }}
+      value={{
+        appointments,
+        setAppointments,
+        addAppointment,
+        updateAppointment,
+        removeAppointment,
+      }}
     >
       {children}
     </AppointmentContext.Provider>

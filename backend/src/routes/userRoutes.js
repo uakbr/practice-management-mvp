@@ -1,12 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const { getUserProfile, updateUserProfile, uploadInsurance, upload } = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
+const {
+  getUserProfile,
+  updateUserProfile,
+  uploadInsurance,
+} = require('../controllers/userController');
 
+// Apply authentication middleware
 router.use(authMiddleware);
 
+// @route   GET /api/user/profile
+// @desc    Get user profile
 router.get('/profile', getUserProfile);
+
+// @route   PUT /api/user/profile
+// @desc    Update user profile
 router.put('/profile', updateUserProfile);
-router.post('/insurance', upload, uploadInsurance);
+
+// @route   POST /api/user/insurance
+// @desc    Upload insurance document
+router.post('/insurance', uploadInsurance);
 
 module.exports = router;

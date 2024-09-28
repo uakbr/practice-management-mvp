@@ -22,6 +22,8 @@ const UserSchema = new mongoose.Schema({
     type: [String],
     default: ['patient'],
   },
+  
+  // Added fields for profile management
   address: {
     type: String,
   },

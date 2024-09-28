@@ -6,9 +6,17 @@ const InsuranceSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  providerName: String,
-  policyNumber: String,
-  scannedDocuments: [String],
+  providerName: {
+    type: String,
+  },
+  policyNumber: {
+    type: String,
+  },
+  scannedDocuments: [
+    {
+      type: String, // URLs or file paths to the scanned documents
+    },
+  ],
   verificationStatus: {
     type: String,
     enum: ['pending', 'verified', 'rejected'],

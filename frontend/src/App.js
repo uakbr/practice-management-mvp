@@ -5,6 +5,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import PrivateRoute from './components/PrivateRoute';
 import Dashboard from './components/Dashboard';
+import Profile from './components/Profile';
+import UploadInsurance from './components/UploadInsurance';
 import AppointmentList from './components/AppointmentList';
 import RequestAppointment from './components/RequestAppointment';
 
@@ -15,8 +17,11 @@ function App() {
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <PrivateRoute path="/dashboard" component={Dashboard} />
+      <PrivateRoute path="/profile" component={Profile} />
+      <PrivateRoute path="/upload-insurance" component={UploadInsurance} />
       <PrivateRoute path="/appointments" component={AppointmentList} />
       <PrivateRoute path="/request-appointment" component={RequestAppointment} />
+      {/* ... other routes ... */}
     </Switch>
   );
 }

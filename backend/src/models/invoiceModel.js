@@ -1,0 +1,1 @@
+// Defines the schema for Invoice documents in MongoDB

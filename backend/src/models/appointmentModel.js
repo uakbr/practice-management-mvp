@@ -1,0 +1,1 @@
+// Defines the schema for Appointment documents in MongoDB

@@ -1,0 +1,1 @@
+// Integrates with Stripe API for payment processing

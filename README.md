@@ -1,9 +1,8 @@
-# Practice Management MVP – Technical Software Specification
+# Practice Management MVP
 
-## 1. Overview
-The Practice Management MVP is a web-based software aimed at streamlining administrative tasks for healthcare practices, specifically focusing on dental clinics. The goal is to provide an integrated platform to handle patient check-in/check-out, invoice payment processing, insurance card upload, OCR for data extraction, and offer both an admin interface for practitioners and a user portal for patients.
+A web-based application aimed at streamlining administrative tasks for healthcare practices, specifically dental clinics.
 
----
+## Project Structure
 
 GitHub repository architecture for the Practice Management MVP:
 

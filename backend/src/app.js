@@ -7,6 +7,7 @@ const connectDB = require('./config/dbConfig');
 const userRoutes = require('./routes/userRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const invoiceRoutes = require('./routes/invoiceRoutes');
+const cors = require('cors');
 
 // Connect to database
 connectDB();
@@ -14,6 +15,10 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors({
+  origin: 'https://your-frontend-domain.com',
+  optionsSuccessStatus: 200
+}));
 
 // Routes
 app.use('/api/auth', authRoutes);

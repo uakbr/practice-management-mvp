@@ -1,1 +1,49 @@
-// Docker configuration for development environment
+version: '3.8'
+services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+  backend:
+    build: ./backend
+    restart: always
+    ports:
+      - '5000:5000'
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/yourdatabase
+      - JWT_SECRET=your_jwt_secret
+      - STRIPE_SECRET_KEY=your_stripe_secret_key
+      - STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/path/to/credentials.json
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:5000
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+volumes:
+  mongo-data:

@@ -3,8 +3,6 @@ services:
   mongo:
     image: mongo
     restart: always
-    ports:
-      - '27017:27017'
     volumes:
       - mongo-data:/data/db
     networks:
@@ -13,32 +11,33 @@ services:
   backend:
     build: ./backend
     restart: always
-    ports:
-      - '5000:5000'
+    depends_on:
+      - mongo
     environment:
       - MONGO_URI=mongodb://mongo:27017/yourdatabase
       - JWT_SECRET=your_jwt_secret
       - STRIPE_SECRET_KEY=your_stripe_secret_key
       - STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
-      - GOOGLE_APPLICATION_CREDENTIALS=/app/path/to/credentials.json
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials.json
     volumes:
       - ./backend:/app
-    depends_on:
-      - mongo
+      - ./backend/credentials.json:/app/credentials.json # Mount credentials
+    ports:
+      - '5000:5000'
     networks:
       - app-network
 
   frontend:
     build: ./frontend
     restart: always
-    ports:
-      - '3000:3000'
+    depends_on:
+      - backend
     environment:
       - REACT_APP_BACKEND_URL=http://localhost:5000
     volumes:
       - ./frontend:/app
-    depends_on:
-      - backend
+    ports:
+      - '3000:3000'
     networks:
       - app-network
 
